@@ -1,5 +1,8 @@
 package com.test_junit_1.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +31,50 @@ public class EmployeeService {
 	}
 
 	public void deleteEmployee(long id) {
+		
 	    employeeRepository.findById(id)
 	    .orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+	    
 	    employeeRepository.deleteById(id);
+	}
+
+	public EmployeeDto updateEmployee(long id, EmployeeDto employeeDto) {
+		
+		Employee emp = employeeRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+		
+		emp.setName(employeeDto.getName());
+		emp.setEmail(employeeDto.getEmail());
+		emp.setMobile(employeeDto.getMobile());
+		emp.setCity(employeeDto.getCity());
+		
+		Employee updatedEmployee = employeeRepository.save(emp);
+		
+		return mapToEmployeeDto(updatedEmployee);
+		
+	}
+	
+	public Employee mapToEmployee(EmployeeDto dto) {
+		
+		Employee emp = new Employee();
+		BeanUtils.copyProperties(dto, emp);
+		return emp;
+	}
+	
+	public EmployeeDto mapToEmployeeDto(Employee emp) {
+		
+		EmployeeDto dto = new EmployeeDto();
+		BeanUtils.copyProperties(emp, dto);
+		return dto;
+	}
+
+	public List<EmployeeDto> findAllEmployees() {
+
+	    List<Employee> employees = employeeRepository.findAll();
+
+	    return employees.stream()
+	    		.map(this::mapToEmployeeDto)
+	    		.collect(Collectors.toList());
 	}
 	
 
