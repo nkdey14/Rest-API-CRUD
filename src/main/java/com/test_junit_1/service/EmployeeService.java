@@ -26,7 +26,12 @@ public class EmployeeService {
 		BeanUtils.copyProperties(savedEmployee, dto);
 		return dto;
 	}
-	
+
+	public void deleteEmployee(long id) {
+	    employeeRepository.findById(id)
+	    .orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+	    employeeRepository.deleteById(id);
+	}
 	
 
 }
