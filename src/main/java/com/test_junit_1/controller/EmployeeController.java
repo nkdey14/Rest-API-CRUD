@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.service.annotation.DeleteExchange;
 
+import com.test_junit_1.dto.APIResponse;
 import com.test_junit_1.dto.EmployeeDto;
 import com.test_junit_1.service.EmployeeService;
 
@@ -38,9 +39,16 @@ public class EmployeeController {
 		
 		EmployeeDto empDto = employeeService.saveEmployee(employeeDto);
 		
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("message", "Employee record saved successfully!!");
-		response.put("data", empDto);
+		APIResponse<EmployeeDto> response = new APIResponse<>
+											(
+												"Employee record saved successfully!!",
+												HttpStatus.OK.value(),
+												empDto
+											);
+		
+//		Map<String, Object> response = new LinkedHashMap<>();
+//		response.put("message", "Employee record saved successfully!!");
+//		response.put("data", empDto);
 		
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -51,8 +59,15 @@ public class EmployeeController {
 		
 		employeeService.deleteEmployee(id);
 		
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("message", "Employee record deleted successfully with id: " + id + " !!");
+		APIResponse<Object> response = new APIResponse<>
+										(
+												"Employee record deleted successfully with id: " + id + " !!",
+												HttpStatus.OK.value(),
+												null
+										);
+		
+//		Map<String, Object> response = new LinkedHashMap<>();
+//		response.put("message", "Employee record deleted successfully with id: " + id + " !!");
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -64,9 +79,16 @@ public class EmployeeController {
 		
 		EmployeeDto empDto = employeeService.updateEmployee(id, employeeDto);
 		
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("message", "Employee record updated successfully with id: " + id + " !!");
-		response.put("data", empDto);
+		APIResponse<EmployeeDto> response = new APIResponse<>
+											(
+												"Employee record updated successfully with id: " + id + " !!",
+												HttpStatus.OK.value(),
+												empDto
+											);
+		
+//		Map<String, Object> response = new LinkedHashMap<>();
+//		response.put("message", "Employee record updated successfully with id: " + id + " !!");
+//		response.put("data", empDto);
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 		
@@ -75,13 +97,20 @@ public class EmployeeController {
 	// http://localhost:9090/api/v1/employees/listAllEmployees
 	
 	@GetMapping("listAllEmployees")
-	public ResponseEntity<Map<String, Object>> getAllEmployees(){
+	public ResponseEntity<?> getAllEmployees(){
 		
 		List<EmployeeDto> empDtos = employeeService.findAllEmployees();
 		
-		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("message", "List of Employees");
-		response.put("data", empDtos);
+		APIResponse<List<EmployeeDto>> response = new APIResponse<>
+											(
+												"List of Employees",
+												HttpStatus.OK.value(),
+												empDtos
+											);
+		
+//		Map<String, Object> response = new LinkedHashMap<>();
+//		response.put("message", "List of Employees");
+//		response.put("data", empDtos);
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
