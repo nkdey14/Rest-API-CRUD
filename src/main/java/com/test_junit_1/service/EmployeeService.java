@@ -1,9 +1,12 @@
 package com.test_junit_1.service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.test_junit_1.dto.EmployeeDto;
@@ -68,9 +71,16 @@ public class EmployeeService {
 		return dto;
 	}
 
-	public List<EmployeeDto> findAllEmployees() {
+	public List<EmployeeDto> findAllEmployees(int pageNo, int pageSize, String sortBy, String sortDir) {
+		
+		Sort sort = sortDir.equalsIgnoreCase("asc")
+	            ? Sort.by(sortBy).ascending()
+	            : Sort.by(sortBy).descending();
 
-	    List<Employee> employees = employeeRepository.findAll();
+	    PageRequest page = PageRequest.of(pageNo, pageSize, sort);
+
+
+	    List<Employee> employees = employeeRepository.findAll(page).getContent();
 
 	    return employees.stream()
 	    		.map(this::mapToEmployeeDto)

@@ -102,12 +102,17 @@ public class EmployeeController {
 		
 	}
 	
-	// http://localhost:9090/api/v1/employees/listAllEmployees
+	// http://localhost:9090/api/v1/employees/listAllEmployees?pageNo=0&pageSize=2&sortBy=name&sortDir=asc
 	
 	@GetMapping("listAllEmployees")
-	public ResponseEntity<?> getAllEmployees(){
+	public ResponseEntity<?> getAllEmployees(
+			@RequestParam(name ="pageNo", defaultValue = "0", required = false) int pageNo,
+			@RequestParam(name ="pageSize", defaultValue = "2", required = false) int pageSize,
+			@RequestParam(name ="sortBy", defaultValue = "id", required = false) String sortBy,
+			@RequestParam(name ="sortDir", defaultValue = "asc", required = false) String sortDir
+			){
 		
-		List<EmployeeDto> empDtos = employeeService.findAllEmployees();
+		List<EmployeeDto> empDtos = employeeService.findAllEmployees(pageNo, pageSize, sortBy, sortDir);
 		
 		APIResponse<List<EmployeeDto>> response = new APIResponse<>
 											(
