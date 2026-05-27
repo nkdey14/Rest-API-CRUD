@@ -114,5 +114,20 @@ public class EmployeeController {
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	// http://localhost:9090/api/v1/employees/getEmployeeById?id=2
+	@GetMapping("/getEmployeeById")
+	public ResponseEntity<APIResponse<EmployeeDto>> getEmployeeById(@RequestParam long id){
+		
+		EmployeeDto empDto = employeeService.findEmployeeById(id);
+		
+		APIResponse<EmployeeDto> response = new APIResponse<>
+											(
+												"Employee details fetched successfully!!",
+												HttpStatus.OK.value(),
+												empDto
+											);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 }
