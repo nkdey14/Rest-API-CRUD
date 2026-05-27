@@ -25,13 +25,9 @@ public class EmployeeService {
 
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
 		
-		Employee emp = new Employee();
-		BeanUtils.copyProperties(employeeDto, emp);
+		Employee emp = mapToEmployee(employeeDto);
 		Employee savedEmployee = employeeRepository.save(emp);
-		
-		EmployeeDto dto = new EmployeeDto();
-		BeanUtils.copyProperties(savedEmployee, dto);
-		return dto;
+		return mapToEmployeeDto(savedEmployee);
 	}
 
 	public void deleteEmployee(long id) {
@@ -47,6 +43,7 @@ public class EmployeeService {
 		Employee emp = employeeRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: "+ id));
 		
+		emp.setId(emp.getId());
 		emp.setName(employeeDto.getName());
 		emp.setEmail(employeeDto.getEmail());
 		emp.setMobile(employeeDto.getMobile());

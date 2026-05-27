@@ -42,7 +42,7 @@ public class EmployeeController {
 		
 		if(result.hasErrors()) {
 			
-			return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
 		}
 		
 		EmployeeDto empDto = employeeService.saveEmployee(employeeDto);
@@ -83,7 +83,16 @@ public class EmployeeController {
 	// http://localhost:9090/api/v1/employees/updateEmployee?id=1
 	
 	@PutMapping("/updateEmployee")
-	public ResponseEntity<?> updateEmployeeDetails(@RequestParam long id, @RequestBody EmployeeDto employeeDto){
+	public ResponseEntity<?> updateEmployeeDetails(
+			@RequestParam long id,
+			@Valid @RequestBody EmployeeDto employeeDto,
+			BindingResult result
+			){
+		
+		if(result.hasErrors()) {
+			
+			return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+		}
 		
 		EmployeeDto empDto = employeeService.updateEmployee(id, employeeDto);
 		
