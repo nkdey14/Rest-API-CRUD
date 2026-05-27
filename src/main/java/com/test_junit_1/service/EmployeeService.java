@@ -1,6 +1,6 @@
 package com.test_junit_1.service;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.test_junit_1.dto.EmployeeDto;
 import com.test_junit_1.entity.Employee;
+import com.test_junit_1.exception.ResourceNotFoundException;
 import com.test_junit_1.repository.EmployeeRepository;
 
 @Service
@@ -36,7 +37,7 @@ public class EmployeeService {
 	public void deleteEmployee(long id) {
 		
 	    employeeRepository.findById(id)
-	    .orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+	    .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: "+ id));
 	    
 	    employeeRepository.deleteById(id);
 	}
@@ -44,7 +45,7 @@ public class EmployeeService {
 	public EmployeeDto updateEmployee(long id, EmployeeDto employeeDto) {
 		
 		Employee emp = employeeRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+				.orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: "+ id));
 		
 		emp.setName(employeeDto.getName());
 		emp.setEmail(employeeDto.getEmail());
@@ -77,11 +78,10 @@ public class EmployeeService {
 	            ? Sort.by(sortBy).ascending()
 	            : Sort.by(sortBy).descending();
 
-	    PageRequest page = PageRequest.of(pageNo, pageSize, sort);
-
+	    Pageable page = PageRequest.of(pageNo, pageSize, sort);
 
 	    List<Employee> employees = employeeRepository.findAll(page).getContent();
-
+	    
 	    return employees.stream()
 	    		.map(this::mapToEmployeeDto)
 	    		.collect(Collectors.toList());
@@ -89,7 +89,8 @@ public class EmployeeService {
 
 	public EmployeeDto findEmployeeById(long id) {
 		
-		Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found with id: "+ id));
+		Employee employee = employeeRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: "+ id));
 		
 		return mapToEmployeeDto(employee);
 	}
