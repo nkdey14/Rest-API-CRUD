@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import com.test_junit_1.dto.APIResponse;
 import com.test_junit_1.dto.EmployeeDto;
 import com.test_junit_1.service.EmployeeService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
@@ -35,7 +38,12 @@ public class EmployeeController {
 	// http://localhost:9090/api/v1/employees/saveEmployee
 	
 	@PostMapping("/saveEmployee")
-	public ResponseEntity<?> saveEmployeeDetails(@RequestBody EmployeeDto employeeDto){
+	public ResponseEntity<?> saveEmployeeDetails(@Valid @RequestBody EmployeeDto employeeDto, BindingResult result){
+		
+		if(result.hasErrors()) {
+			
+			return new ResponseEntity<>(result.getFieldError().getDefaultMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		
 		EmployeeDto empDto = employeeService.saveEmployee(employeeDto);
 		

@@ -1,20 +1,24 @@
 package com.test_junit_1.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class EmployeeDto {
 		
 		private long id;
 		
+		@NotBlank(message = "Name can't be blank!")
+		@Size(min = 2, message = "Name should be at least of 2 characters!")
 		private String name;
 		
+		@Email(message = "Invalid Email!!")
 		private String email;
 		
+		@Size(min = 10, max = 10, message = "Invalid Mobile No.!")
 		private String mobile;
 		
+		@NotBlank(message = "City can't be blank!")
 		private String city;
 		
 
